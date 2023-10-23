@@ -1,0 +1,12 @@
+export const BREED_SEARCH = "breed_Search";
+export const ALL_DOGS = "all_dogs";
+export const DOGBYID = "dog_By_Id";
+export const ALLTEMPERAMENTS = "all_temperaments";
+export const SET_CURRENT_PAGE = "paginate";
+export const ORDER_VALUE = "orderValue";
+export const FILTERAPIBD_VALUE = "filterapibdvalue";
+export const FILTERBYTEMPER_VALUE = "filterbytemperament";
+export const FILTERS = "filters";
+export const POSTDOG = "post_dog";
+export const DATALOADED = "data_loaded";
+export const MESSAGEGLOBAL = "messageGlobal";
