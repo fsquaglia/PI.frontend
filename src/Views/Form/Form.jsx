@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import {
   Input,
+  InputBig,
   Button,
   StyledImage,
   ErrorMessage,
@@ -20,6 +21,8 @@ import {
   VerticalDiv,
   VerticalConteinerDiv,
   StyledDiv,
+  StyledH2,
+  StyledLabel,
 } from "../../styles";
 
 require("dotenv").config();
@@ -104,6 +107,7 @@ const Form = () => {
 
     // en tempGlobal [{},{},{}] tengo la tabla de temperamentos
     // en selectedTemperaments: ["", "", ""], tengo los que selecciona el usuario
+    //de acuerdo a los temperam seleccionados, debo buscar sus id en la BD
     const idTemperSelected = [];
     if (tempGlobal) {
       idTemperSelected.push(
@@ -112,8 +116,14 @@ const Form = () => {
           .map((temp) => temp.id)
       );
     }
-    const heightString = `${dogData.heightMin} - ${dogData.heightMax}`;
-    const weightString = `${dogData.weightMin} - ${dogData.weightMax}`;
+    //las equivalencias de las alturas de cm a pulgadas
+    const heightMinImperial = Math.floor(dogData.heightMin / 2.54);
+    const heightMaxImperial = Math.floor(dogData.heightMax / 2.54);
+    const heightString = `${dogData.heightMin} - ${dogData.heightMax} cm | ${heightMinImperial} - ${heightMaxImperial} in`;
+    //las equivalencias del peso de kg a libras
+    const weightMinImperial = Math.floor(dogData.weightMin * 2.205);
+    const weightMaxImperial = Math.floor(dogData.weightMax * 2.205);
+    const weightString = `${dogData.weightMin} - ${dogData.weightMax} kg | ${weightMinImperial} - ${weightMaxImperial} lbs`;
     const lifeString = `${dogData.lifeMin} - ${dogData.lifeMax} years`;
     const dogSend = {
       name: dogData.name,
@@ -183,11 +193,11 @@ const Form = () => {
 
   return (
     <VerticalConteinerDiv>
-      <h2>Crea tu raza</h2>
+      <StyledH2>Crea tu raza de dog friend</StyledH2>
       <StyledForm onSubmit={handleSubmit}>
         {/*div nombre de raza*/}
         <VerticalDiv>
-          <Input
+          <InputBig
             type="text"
             name="name"
             id="name"
@@ -202,7 +212,7 @@ const Form = () => {
 
         <VerticalDiv>
           <StyledDiv>
-            <label htmlFor="height">Altura (cms):</label>
+            <StyledLabel htmlFor="height">Altura (cms):</StyledLabel>
             <Input
               type="number"
               name="heightMin"
@@ -221,10 +231,10 @@ const Form = () => {
               onChange={handleChange}
               onPaste={handlePaste}
             />
-            <span style={{ color: "#ff9800" }}>{errors.height}</span>
+            <ErrorMessage>{errors.height}</ErrorMessage>
           </StyledDiv>
           <StyledDiv>
-            <label htmlFor="weight">Peso (kgs): </label>
+            <StyledLabel htmlFor="weight">Peso (kgs): </StyledLabel>
             <Input
               type="number"
               name="weightMin"
@@ -243,10 +253,10 @@ const Form = () => {
               onChange={handleChange}
               onPaste={handlePaste}
             />
-            <span style={{ color: "#ff9800" }}> {errors.weight}</span>
+            <ErrorMessage> {errors.weight}</ErrorMessage>
           </StyledDiv>
           <StyledDiv>
-            <label htmlFor="life">Años de vida: </label>
+            <StyledLabel htmlFor="life">Años de vida: </StyledLabel>
             <Input
               type="number"
               name="lifeMin"
@@ -267,7 +277,7 @@ const Form = () => {
               onPaste={handlePaste}
               onKeyDown={handleKeyPress}
             />
-            <span style={{ color: "#ff9800" }}> {errors.life}</span>
+            <ErrorMessage> {errors.life}</ErrorMessage>
           </StyledDiv>
         </VerticalDiv>
 
@@ -284,7 +294,7 @@ const Form = () => {
               />
             ))}
           </div>
-          <p style={{ color: "#ff9800" }}> {errors.image}</p>
+          <ErrorMessage> {errors.image}</ErrorMessage>
         </VerticalDiv>
 
         {/*div temperamentos en sub componente*/}

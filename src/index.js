@@ -6,9 +6,9 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "../src/Redux/store";
 import { BrowserRouter } from "react-router-dom";
-// import axios from "axios"
+import axios from "axios";
 
-// axios.defaults.baseURL
+axios.defaults.baseURL = "https://pibackend-production.up.railway.app";
 
 ReactDOM.render(
   <React.StrictMode>

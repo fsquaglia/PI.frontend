@@ -1,58 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Searchbar from "../Searchbar/Searchbar";
-import { Link } from "react-router-dom";
-import { Button, TitleContainer } from "../../styles";
+import { Link, useLocation } from "react-router-dom";
+import {
+  Button,
+  TitleContainer,
+  StyledH2,
+  ConteinerNavDiv,
+  ContentNavDiv,
+  StyledP,
+  StyledLikeP,
+} from "../../styles";
+import { likesConut } from "../../Redux/actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const NavBar = () => {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const likesCount = useSelector((state) => state.likesCount);
+
+  const [like, setLike] = useState("🤍");
+  const [likePulsed, setLikePulsed] = useState(false);
+  const [textCountLikes, setTextCountLikes] = useState("");
+
+  const handleLike = () => {
+    //una vez que se pulsó like ya no se ejecuta la acción en esta instancia de navegacion
+    if (!likePulsed) {
+      setLike("❤️");
+      dispatch(likesConut());
+      setLikePulsed(true);
+    }
+  };
+  useEffect(() => {
+    if (likePulsed) {
+      setTextCountLikes(` | ${likesCount} Likes 🐶`);
+    }
+  }, [likesCount, likePulsed]);
+
   return (
-    <>
+    <div>
       <TitleContainer>
-        <h2>Encuentra tu dog friend!</h2>
+        <StyledH2>Encuentra tu dog friend!</StyledH2>
       </TitleContainer>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr", // Divide el espacio en 3 fracciones iguales
-          gap: "10px", // Espacio entre los divs hijos
-        }}
-      >
-        <div
-          style={{
-            margin:
-              "0 auto" /* Margen automático para centrar horizontalmente */,
-            textAlign: "center" /* Centrar el contenido de forma horizontal */,
-          }}
-        >
+      <ConteinerNavDiv>
+        <ContentNavDiv>
           <Link to={"/home"}>
             <Button type="button">Home</Button>
           </Link>
           <Link to={"/form"}>
             <Button type="button">Nueva Raza</Button>
           </Link>
-        </div>
-        <div
-          style={{
-            margin:
-              "0 auto" /* Margen automático para centrar horizontalmente */,
-            textAlign: "center" /* Centrar el contenido de forma horizontal */,
-          }}
-        >
-          <Searchbar />
-        </div>
-        <div
-          style={{
-            margin:
-              "0 auto" /* Margen automático para centrar horizontalmente */,
-            textAlign: "center" /* Centrar el contenido de forma horizontal */,
-          }}
-        >
+        </ContentNavDiv>
+        <ContentNavDiv>
+          {location.pathname === "/home" && <Searchbar />}
+        </ContentNavDiv>
+        <ContentNavDiv>
+          <StyledP>Doglike! </StyledP>
+          <StyledLikeP onClick={handleLike}>{like}</StyledLikeP>
+          <StyledP>{textCountLikes}</StyledP>
+
           <Link to={"/viewAbout"}>
             <Button type="button">About</Button>
           </Link>
-        </div>
-      </div>
-    </>
+        </ContentNavDiv>
+      </ConteinerNavDiv>
+    </div>
   );
 };
 

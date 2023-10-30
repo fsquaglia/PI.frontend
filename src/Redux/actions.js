@@ -12,13 +12,37 @@ import {
   POSTDOG,
   DATALOADED,
   MESSAGEGLOBAL,
+  LIKES_COUNT_SUCCESS,
+  DELETECARD,
+  DELETEDOGBD,
+  LIKESDOGS,
 } from "./actions-types";
 
 import axios from "axios";
+//Tengo mi base url de axios en index.js --> axios.defaults.baseURL = "http://localhost:3001"
 
-require("dotenv").config();
-const ENDDOGS = process.env.REACT_APP_ENDDOGS;
-const ENDTEMPERAMENTS = process.env.REACT_APP_ENDTEMPERAMENTS;
+//eliminar un Dog de la BD
+export const deleteDogById = (idDeleteDog) => {
+  return async (dispatch) => {
+    try {
+      await axios.delete("/dogs/" + idDeleteDog, null);
+      dispatch({
+        type: MESSAGEGLOBAL,
+        payload: "Se eliminó el dog definitivamente",
+      });
+    } catch (error) {
+      alert("Hubo un error al eliminar: " + error.message);
+    }
+  };
+};
+
+//fn eliminar una card logica
+export const delete_card = (id) => {
+  return {
+    type: DELETECARD,
+    payload: id,
+  };
+};
 
 //fn para establacer un mensaje global
 export const message_global = (message) => {
@@ -74,14 +98,14 @@ export const setCurrentPage = (page) => ({
 export const breedSearch = (breed) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios(`${ENDDOGS}?name=${breed}`);
+      const { data } = await axios(`/dogs?name=${breed}`);
 
       dispatch({
         type: BREED_SEARCH,
         payload: data,
       });
     } catch (error) {
-      alert(error.message);
+      alert("Error al obtener dobs por raza: " + error.message);
     }
   };
 };
@@ -90,13 +114,13 @@ export const breedSearch = (breed) => {
 export const allDogs = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get(ENDDOGS);
+      const { data } = await axios.get("/dogs");
       dispatch({
         type: ALL_DOGS,
         payload: data,
       });
     } catch (error) {
-      alert(error.message);
+      alert("Error al obtener todos los dogs: " + error.message);
     }
   };
 };
@@ -105,45 +129,46 @@ export const allDogs = () => {
 export const dogById = (id) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get(ENDDOGS + "/" + id);
+      const { data } = await axios.get("/dogs/" + id);
 
       dispatch({
         type: DOGBYID,
         payload: data,
       });
     } catch (error) {
-      alert(error.message);
+      alert("Error al obtener el dog por id: " + error.message);
     }
   };
 };
 
+//fn para obtener todos los temperamentos de la API
 export const allTemperaments = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get(ENDTEMPERAMENTS);
+      const { data } = await axios.get("/temperaments");
 
       dispatch({
         type: ALLTEMPERAMENTS,
         payload: data,
       });
     } catch (error) {
-      alert(error.message);
+      alert("Error al obtener los temperaments: " + error.message);
     }
   };
 };
 
-//fn alta de un perro
+//fn alta de un dog por Formulario
 export const postDogs = (dog) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.post(ENDDOGS, dog);
+      const { data } = await axios.post("/dogs", dog);
       dispatch({
         type: POSTDOG,
         payload: data.message,
       });
       alert(data.message);
     } catch (error) {
-      alert("Hubo un error: " + error.message);
+      alert("Hubo un error al dar de alta: " + error.message);
     }
   };
 };
@@ -151,9 +176,67 @@ export const postDogs = (dog) => {
 //fn buscar en BD por name
 export const dogbyName = async (name) => {
   try {
-    const { data } = await axios(`${ENDDOGS}?name=${name}`);
+    const { data } = await axios(`/dogs?name=${name}`);
     return data;
   } catch (error) {
     throw error.message;
   }
+};
+
+//fn obtener cantidad de likes
+export const likesConut = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios("/likes");
+
+      dispatch({ type: LIKES_COUNT_SUCCESS, payload: data.message });
+    } catch (error) {
+      alert("Hubo un error al obtener los likes: " + error.message);
+    }
+  };
+};
+
+//fn obtener la tabla de Likes por Dogs
+export const likes_Dogs = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios("/likesdogs");
+      dispatch({
+        type: LIKESDOGS,
+        payload: data,
+      });
+    } catch (error) {
+      alert("Error al obtener los likes por dogs " + error.message);
+    }
+  };
+};
+
+//fn incrementar un like a un dog
+export const putIncrementLikeDog = (id) => {
+  return async (dispatch) => {
+    try {
+      await axios.put("/likesdogs/" + id);
+      dispatch({
+        type: MESSAGEGLOBAL,
+        payload: "Like agregado",
+      });
+    } catch (error) {
+      alert("No se pudo agregar el like " + error.message);
+    }
+  };
+};
+
+//fn eliminar dog de Modelo LikesDogs
+export const delDog_Like = (id) => {
+  return async (dispatch) => {
+    try {
+      await axios.delete("/likesdogs/" + id);
+      dispatch({
+        type: MESSAGEGLOBAL,
+        payload: "Dog Likes eliminados",
+      });
+    } catch (error) {
+      alert("No se pudo eliminar el dog like " + error.message);
+    }
+  };
 };

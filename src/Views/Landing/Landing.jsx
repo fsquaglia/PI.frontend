@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { allDogs, allTemperaments } from "../../Redux/actions";
+import {
+  allDogs,
+  allTemperaments,
+  filterAndOrder,
+  likes_Dogs,
+} from "../../Redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { data_loaded } from "../../Redux/actions";
 import { Button, ContainerDiv, ContentDiv, TextP } from "../../styles";
@@ -21,10 +26,12 @@ const Landing = () => {
       const delay = 1000;
       setTimeout(() => {
         // Realizar las llamadas a las acciones de Redux
-        dispatch(allDogs());
+        //cargando los estados globales
+        dispatch(allDogs()).then(() => dispatch(filterAndOrder()));
         dispatch(allTemperaments());
         setButtonDisabled(false);
         dispatch(data_loaded(true));
+        dispatch(likes_Dogs());
       }, delay);
     }
   }, [dispatch, dataLoaded]);
@@ -32,7 +39,7 @@ const Landing = () => {
   return (
     <ContainerDiv>
       <ContentDiv>
-        <TextP>Siguen siendo el mejor amigo</TextP>
+        <TextP>Siguen siendo nuestro mejor amigo</TextP>
         <Button onClick={onClick} disabled={buttonDisabled}>
           Ingresar
         </Button>

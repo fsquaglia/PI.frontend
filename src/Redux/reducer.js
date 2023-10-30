@@ -12,6 +12,9 @@ import {
   POSTDOG,
   DATALOADED,
   MESSAGEGLOBAL,
+  LIKES_COUNT_SUCCESS,
+  DELETECARD,
+  LIKESDOGS,
 } from "./actions-types";
 
 //definir el initialState
@@ -28,12 +31,27 @@ let initialState = {
   filterByTemperamValue: "all",
   message: "",
   dataLoaded: false,
+  likesCount: 0,
+  likesDogs: [],
 };
 
 //definir la función rootReducer
 
 function rootReducer(state = initialState, action) {
   switch (action.type) {
+    case LIKESDOGS:
+      return {
+        ...state,
+        likesDogs: action.payload,
+      };
+
+    case DELETECARD: //eliminar una Card, logica y/o fisica
+      return {
+        ...state,
+        breedDogs: state.breedDogs.filter((dog) => dog.id !== action.payload),
+      };
+    case LIKES_COUNT_SUCCESS: //aumentar y devolver las like del site
+      return { ...state, likesCount: action.payload };
     case MESSAGEGLOBAL:
       return { ...state, message: action.payload };
     case DATALOADED:
@@ -124,7 +142,7 @@ function rootReducer(state = initialState, action) {
         breedDogs: dogsOrder,
       };
 
-    case SET_CURRENT_PAGE:
+    case SET_CURRENT_PAGE: //paginacion
       return {
         ...state,
         currentPage: action.payload,
