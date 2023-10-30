@@ -32,7 +32,7 @@ const NavBar = () => {
   };
   useEffect(() => {
     if (likePulsed) {
-      if (likesCount !== 0) {
+      if (likesCount !== "") {
         setTextCountLikes(` | ${likesCount} Likes 🐶`);
       }
     }
