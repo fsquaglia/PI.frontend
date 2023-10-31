@@ -32,7 +32,7 @@ let initialState = {
   filterByTemperamValue: "all",
   message: "",
   dataLoaded: false,
-  likesCount: 0,
+  likesCount: "",
   likesDogs: [],
   breedNameGlobal: "",
 };
