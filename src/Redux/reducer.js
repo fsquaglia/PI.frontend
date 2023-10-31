@@ -16,6 +16,7 @@ import {
   DELETECARD,
   LIKESDOGS,
   BREEDNAMEGLOBAL,
+  LIKEDOGPULSED,
 } from "./actions-types";
 
 //definir el initialState
@@ -35,12 +36,18 @@ let initialState = {
   likesCount: "",
   likesDogs: [],
   breedNameGlobal: "",
+  likeDogPulsed: [], //setea corazon pulsado en cada card
 };
 
 //definir la función rootReducer
 
 function rootReducer(state = initialState, action) {
   switch (action.type) {
+    case LIKEDOGPULSED:
+      return {
+        ...state,
+        likeDogPulsed: [...state.likeDogPulsed, action.payload],
+      };
     case BREEDNAMEGLOBAL:
       return {
         ...state,

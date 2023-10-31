@@ -22,6 +22,7 @@ import {
   deleteDogById,
   delete_card,
   filterAndOrder,
+  like_dog_pulsed,
   likes_Dogs,
   putIncrementLikeDog,
 } from "../../Redux/actions";
@@ -30,6 +31,7 @@ require("dotenv").config();
 const ENDIMGS = process.env.REACT_APP_ENDIMGS;
 
 const Card = (props) => {
+  const likeDogPulsed = useSelector((state) => state.likeDogPulsed);
   const likesDogs = useSelector((state) => state.likesDogs);
   const dispatch = useDispatch();
   //truncamos el texto de temperaments si es demasiado largo
@@ -40,23 +42,21 @@ const Card = (props) => {
       : props.temperament
     : "";
 
-  const [fav, setFav] = useState("🤍");
-  const [favPulsed, setFavPulsed] = useState(false);
   const [favCount, setFavCount] = useState("0");
+  let fav = likeDogPulsed.includes(props.id) ? "❤️" : "🤍";
 
   useEffect(() => {
-    likesDogs.forEach((fav) => {
-      if (fav.id === props.id.toString()) {
-        setFavCount(fav.likes);
+    likesDogs.forEach((favorit) => {
+      if (favorit.id === props.id.toString()) {
+        setFavCount(favorit.likes);
       }
     });
   }, [likesDogs]);
 
   //una vez que se pulsó fav ya no se ejecuta la acción en esta instancia de navegacion
   const handleFav = () => {
-    if (!favPulsed) {
-      setFav("❤️");
-      setFavPulsed(true);
+    if (!likeDogPulsed.includes(props.id)) {
+      dispatch(like_dog_pulsed(props.id));
       dispatch(putIncrementLikeDog(props.id)).then(() =>
         dispatch(likes_Dogs())
       );
